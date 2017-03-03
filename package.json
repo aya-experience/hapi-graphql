@@ -6,11 +6,11 @@
   "main": "./lib/index.js",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/SimonDegraeve/hapi-graphql/issues"
+    "url": "https://github.com/aya-experience/hapi-graphql/issues"
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/SimonDegraeve/hapi-graphql.git"
+    "url": "http://github.com/aya-experience/hapi-graphql.git"
   },
   "keywords": [
     "hapi",
@@ -31,7 +31,7 @@
     "eslint": "^3.0.1",
     "eslint-config-airbnb-base": "^4.0.0",
     "eslint-plugin-import": "^1.10.2",
-    "graphql": "^0.6.0",
+    "graphql": "^0.7.2",
     "hapi": "^13.5.0"
   },
   "dependencies": {
@@ -42,7 +42,7 @@
   },
   "peerDependencies": {
     "babel-runtime": "^6.9.2",
-    "graphql": "^0.6.0"
+    "graphql": "^0.7.2"
   },
   "eslintConfig": {
     "parser": "babel-eslint",
