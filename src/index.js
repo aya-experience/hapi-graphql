@@ -216,9 +216,7 @@ const createResult = async ({
 };
 
 function selectStatusCode(errors) {
-  let priorities = [];
-  priorities.push(409, 404, 400, 500, 512, 408, 440);
-
+  const priorities = [409, 404, 400, 500, 512, 408, 440];
   // https://github.com/graphql/graphql-js/issues/251y
   let codes = [];
   for(let error of errors) {
@@ -299,7 +297,6 @@ const handler = (route, options = {}) => async (request, reply) => {
     // Return error, picking up Boom overrides
     const { statusCode = 500 } = error.output;
     const errors = error.data || [error];
-    //reply({ errors: errors.map(errorFormatter) }).code(statusCode);
     reply({ errors: errors.map(errorFormatter) }).code(statusCode);
 
   }
