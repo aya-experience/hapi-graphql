@@ -187,8 +187,9 @@ const createResult = async ({
   }
 
   // Perform the execution, reporting any errors creating the context.
+  let result;
   try {
-    return await execute(
+    result = await execute(
       schema,
       documentAST,
       rootValue,
@@ -200,7 +201,32 @@ const createResult = async ({
     // Return 400: Bad Request if any execution context errors exist.
     throw Boom.badRequest('Context error', [contextError]);
   }
+  if(result.errors) {
+    const code = selectStatusCode(result.errors);
+    switch(code) {
+      case 409:
+        throw Boom.conflict('Conflict error',result.errors);
+        break;
+      default:
+        throw Boom.badRequest('Bad request', result.errors);
+        break
+    }
+  }
+  return result;
 };
+
+function selectStatusCode(errors) {
+  let priorities = [];
+  priorities.push(409, 404, 400, 500, 512, 408, 440);
+
+  // https://github.com/graphql/graphql-js/issues/251y
+  let codes = [];
+  for(let error of errors) {
+    codes.push(JSON.parse(JSON.stringify(error.originalError)).code);
+  }
+  codes.sort((code1, code2) => priorities.indexOf(code1) - priorities.indexOf(code2));
+  return codes[0];
+}
 
 
 /**
@@ -273,7 +299,9 @@ const handler = (route, options = {}) => async (request, reply) => {
     // Return error, picking up Boom overrides
     const { statusCode = 500 } = error.output;
     const errors = error.data || [error];
+    //reply({ errors: errors.map(errorFormatter) }).code(statusCode);
     reply({ errors: errors.map(errorFormatter) }).code(statusCode);
+
   }
 };
 
