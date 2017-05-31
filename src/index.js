@@ -25,7 +25,7 @@ const optionsSchema = {
   query: [
     Joi.func(),
     Joi.object({
-      schema: Joi.object().required(),
+      schemaFunc: Joi.func().required(),
       context: Joi.object(),
       rootValue: Joi.object(),
       pretty: Joi.boolean(),
@@ -134,13 +134,14 @@ const createResult = async ({
   query,
   request,
   rootValue,
-  schema,
+  schemaFunc,
   showGraphiQL,
   validationRules,
   variables,
 }) => {
   // If there is no query, but GraphiQL will be displayed, do not produce
   // a result, otherwise return a 400: Bad Request.
+  const schema = await schemaFunc();
   if (!query) {
     if (showGraphiQL) {
       return null;
@@ -236,7 +237,7 @@ const handler = (route, options = {}) => async (request, reply) => {
   try {
     // Get GraphQL options given this request.
     const {
-      schema,
+      schemaFunc,
       context,
       rootValue,
       pretty,
@@ -275,7 +276,7 @@ const handler = (route, options = {}) => async (request, reply) => {
       query,
       request,
       rootValue,
-      schema,
+      schemaFunc,
       showGraphiQL,
       validationRules,
       variables,
